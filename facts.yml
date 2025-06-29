@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  gather_facts: yes   # This is default, you can omit
+  tasks:
+    - name: Show all gathered facts
+      debug:
+        var: ansible_facts

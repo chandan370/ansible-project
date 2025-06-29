@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  connection: local
+  vars_files:
+    - foo.yml
+  tasks:
+  - name: start an instance with a public IP address
+    amazon.aws.ec2_instance:
+      name: "{{ item.tag }}"
+      # key_name: "prod-ssh-key"
+      vpc_subnet_id: subnet-0408ff5790256a757
+      instance_type: t2.micro
+      security_group: default
+      region: us-east-2
+      aws_access_key: "{{access_key}}"  # From vault as defined
+      aws_secret_key: "{{secret_key}}"  # From vault as defined
+      network:
+        assign_public_ip: true
+      image_id: "{{item.name}}"
+      tags:
+        environment: "{{item.tag}}"
+    loop:
+      - {name: 'ami-0c803b171269e2d72',tag: 'amazon1'}
+      - {name: 'ami-0d1b5a8c13042c939', tag: 'ubuntu1'}
+      - {name: 'ami-0d1b5a8c13042c939', tag: 'ubuntu2'}
